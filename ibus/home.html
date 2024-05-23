@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapa de Bairros</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(90deg, #293e42 27%, rgba(41, 62, 66, 1) 100%);
+      color: white;
+      flex: 0 0 auto;
+      padding: 20px;
+    }
+
+    .logo {
+      width: 100px;
+      height: auto;
+    }
+
+    .main-container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .neighborhood-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+      padding: 20px;
+      max-width: 250px;
+      background: #f6f6f6;
+      box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+      border-radius: 8px;
+    }
+
+    .neighborhood-container h2 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .neighborhood-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .neighborhood-list li {
+      cursor: pointer;
+      padding: 5px;
+    }
+
+    .map-container {
+      flex: 2;
+      overflow: hidden;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="logo-container">
+    <img class="logo" src="logo.png" alt="Logo do iBus">
+  </div>
+  <div class="main-container">
+    <div class="neighborhood-container">
+      <h2>Bairros</h2>
+      <ul class="neighborhood-list">
+        <li onclick="changeMap('Efapi')">Efapi</li>
+        <li onclick="changeMap('Crito Rei')">Crito Rei</li>
+        <li onclick="changeMap('Universitario')">Universitario</li>
+      </ul>
+    </div>
+    <div class="map-container">
+      <div id="map"></div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script>
+    let map;
+
+    function changeMap(neighborhood) {
+      let coordinates = { lat: -27.1006, lng: -52.6151 }; // Coordenadas padrão (substitua com as coordenadas reais de cada bairro)
+
+      switch (neighborhood) {
+        case 'Efapi':
+          coordinates = { lat: -27.095463132022555, lng: -52.68132299998526 };
+		          L.marker([ -27.095463132022555,  -52.68132299998526]).addTo(map)
+          .bindPopup('Efapi.')
+          .openPopup();
+          break;
+        case 'Crito Rei':
+          coordinates = { lat: -27.070963925041518, lng: -52.63629157582175 };
+		  		          L.marker([ -27.070963925041518,  -52.63629157582175]).addTo(map)
+          .bindPopup('Cristo Rei.')
+          .openPopup();
+          break;
+        case 'Universitario':
+          coordinates = { lat: -27.0853, lng: -52.6189 };
+          break;
+        default:
+          break;
+      }
+
+      map.setView([coordinates.lat, coordinates.lng], 13);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const loggedInUser = sessionStorage.getItem('loggedInUser');
+      if (!loggedInUser) {
+        window.location.href = 'index.html';
+      } else {
+        // Inicializar o mapa
+        map = L.map('map').setView([-27.1006, -52.6151], 13); // Coordenadas iniciais e zoom
+
+        // Adicionar camada de mapa do OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Adicionar um marcador inicial (pode ser opcional)
+        L.marker([-27.1006, -52.6151]).addTo(map)
+          .bindPopup('Bem-vindo ao mapa de bairros.')
+          .openPopup();
+      }
+    });
+  </script>
+</body>
+</html>
